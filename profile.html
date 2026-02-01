@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Task & Notes Manager</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <h1 style="margin: 0; flex: 1;">User Profile</h1>
+            <a href="about.html" class="btn btn-secondary" style="margin-left: auto; margin-right: 0.5rem;"
+                aria-label="About our team">About Us</a>
+        </div>
+        <nav id="authAwareNav">
+            <!-- Populated by JS -->
+        </nav>
+    </header>
+
+    <main>
+        <div class="container dashboard-container">
+            <div class="profile-section">
+                <!-- Profile Image Section -->
+                <div class="profile-image-section">
+                    <h3>Profile Picture</h3>
+                    <div class="profile-image-container">
+                        <img id="profileImage" src="" alt="Profile" class="profile-image" style="display:none;">
+                        <div id="profileImagePlaceholder" class="profile-image-placeholder">
+                            <span>No Image</span>
+                        </div>
+                    </div>
+                    <div class="image-upload-form">
+                        <!-- Simple image upload via Base64 -->
+                        <input type="file" id="imageInput" accept="image/*">
+                    </div>
+                </div>
+
+                <!-- Profile Info Section -->
+                <div class="profile-info-section">
+                    <h3>Account Information</h3>
+                    <div id="alert-container"></div>
+
+                    <form id="profileForm">
+                        <div class="mb-3">
+                            <label class="form-label" htmlFor="name">Full Name</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" htmlFor="email">Email</label>
+                            <input type="email" class="form-control" id="email" disabled
+                                style="background-color: #e9ecef;">
+                            <div class="form-text text-muted">Email cannot be changed.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" htmlFor="newPassword">New Password</label>
+                            <input type="password" class="form-control" id="newPassword"
+                                placeholder="Leave blank to keep current password">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> To-Do & Notes Manager. All rights reserved.</p>
+    </footer>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = StorageManager.getCurrentUser();
+            if (!user) return;
+
+            // Preload data
+            document.getElementById('name').value = user.name || '';
+            document.getElementById('email').value = user.email || '';
+
+            if (user.profileImage) {
+                const img = document.getElementById('profileImage');
+                img.src = user.profileImage;
+                img.style.display = 'block';
+                document.getElementById('profileImagePlaceholder').style.display = 'none';
+            }
+
+            // Image Handler
+            document.getElementById('imageInput').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const base64 = reader.result;
+                        // Update UI
+                        const img = document.getElementById('profileImage');
+                        img.src = base64;
+                        img.style.display = 'block';
+                        document.getElementById('profileImagePlaceholder').style.display = 'none';
+
+                        // Save immediately or wait for submit? Let's save on submit for consistency
+                        // But for UI feedback, we showed it. We'll store it in a variable.
+                        window.pendingProfileImage = base64;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Form Handler
+            document.getElementById('profileForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const password = document.getElementById('newPassword').value;
+
+                const updates = { name: name };
+                if (password) updates.password = password;
+                if (window.pendingProfileImage) updates.profileImage = window.pendingProfileImage;
+
+                if (StorageManager.updateUserProfile(user.id, updates)) {
+                    showAlert('Profile updated successfully!', 'success');
+                    document.getElementById('newPassword').value = '';
+                } else {
+                    showAlert('Failed to update profile.', 'danger');
+                }
+            });
+        });
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alert-container');
+            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => container.innerHTML = '', 3000);
+        }
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>

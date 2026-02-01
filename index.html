@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task & Notes Manager</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <h1 style="margin: 0; flex: 1;">Task & Notes Manager</h1>
+            <a href="about.html" class="btn btn-secondary" style="margin-left: auto; margin-right: 0.5rem;"
+                aria-label="About our team">About Us</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="container two-column">
+            <!-- Left Side: Content & Buttons -->
+            <div class="left">
+                <div class="main-content">
+                    <div class="hero-top">
+                        <section class="intro">
+                            <h2>Organize your life</h2>
+                            <p class="lead">Simple, effective, and free. Manage your tasks and notes in one place.</p>
+                            <h3>Get started today!</h3>
+                        </section>
+
+                        <section class="buttons">
+                            <a href="login.html" class="btn login" aria-label="Login to your account">Login</a>
+                            <a href="register.html" class="btn register"
+                                aria-label="Register for a new account">Register</a>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Image -->
+            <div class="right">
+                <img src="images/to-do1.png" alt="Task Management Illustration" class="reveal">
+            </div>
+        </div>
+    </main>
+
+    <div class="buttom reveal">
+        <div class="social-proof-inner">
+            <h3 style="color:#0d6efd; margin-bottom:0.5rem;">Why people love To‑Do & Notes Manager</h3>
+            <p style="color:#495057; margin-bottom:1rem;">Trusted by thousands to stay productive — average users report
+                finishing more tasks and saving time every week.</p>
+
+            <div class="stats-grid" style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1rem;">
+                <div class="stats-card">
+                    <div class="stats-number">120,482+</div>
+                    <div class="stats-label">Active users</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-number">1,254,318</div>
+                    <div class="stats-label">Tasks completed</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-number">4.8 / 5</div>
+                    <div class="stats-label">Average rating</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-number">~2.3h</div>
+                    <div class="stats-label">Saved / week (avg)</div>
+                </div>
+            </div>
+
+            <div class="testimonials" style="display:flex; gap:1rem; flex-direction:column;">
+                <blockquote>“Best productivity boost I've found — I get more done in less time.” — A. Morgan
+                </blockquote>
+                <blockquote>“Simple, fast, and reliable. Perfect for personal and work tasks.” — J. Patel</blockquote>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; <span id="year"></span> To-Do & Notes Manager. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Reveal animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+            setTimeout(() => {
+                reveals.forEach(el => el.classList.add('visible'));
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>
